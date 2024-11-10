@@ -9,11 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Override
+    //@Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
 //    }
+
+    private Game game;
+
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -21,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         setContentView(R.layout.activity_main);
+
+        game = new Game((GameView) findViewById(R.id.canvas));
+        game.setRunning(true);
+        game.start();
 
     }
 }

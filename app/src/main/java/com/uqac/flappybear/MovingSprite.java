@@ -3,7 +3,7 @@ package com.uqac.flappybear;
 public class MovingSprite extends Sprite{
     double vx;
     double vy;
-    public MovingSprite(int x, int y, int w, int h, double vx, double vy){
+    public MovingSprite(double x, double y, double w, double h, double vx, double vy){
             super(x, y, w, h);
             this.vx = vx;
             this.vy = vy;

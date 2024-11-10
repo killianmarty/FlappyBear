@@ -1,6 +1,8 @@
 package com.uqac.flappybear;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,20 +20,20 @@ public class Sprite {
     double h;
 
     float orientation;
-    ArrayList<Bitmap> textures;
+    ArrayList<Integer> textures;
     int textureChangeFrequency;
     int currentTextureIndex;
     double currentTextureAge;
-    Bitmap currentTexture;
+    Integer currentTexture;
 
-    public Sprite(int x, int y, int w, int h){
+    public Sprite(double x, double y, double w, double h){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.orientation = 0;
 
-        this.textures = new ArrayList<Bitmap>();
+        this.textures = new ArrayList<Integer>();
         this.textureChangeFrequency = 0;
         this.currentTextureIndex = -1;
         this.currentTextureAge = 0;
@@ -102,7 +104,7 @@ public class Sprite {
         return;
     }
 
-    void addTexture(String src){
+    void addTexture(Integer drawableId){
 
 //        if(!Sprite.textureCache[src]){
 //            let tmpTexture = new Image();
@@ -113,6 +115,9 @@ public class Sprite {
 //        this.textures.add(Sprite.textureCache[src]);
 //        this.currentTextureIndex = 0;
 //        this.currentTexture = this.textures[0];
+        textures.add(drawableId);
+        currentTextureIndex = 0;
+        currentTexture = textures.get(0);
 
     }
 

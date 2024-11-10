@@ -12,6 +12,8 @@ import android.view.SurfaceView;
 public class GameView extends SurfaceView {
     private Bitmap bmp;
     private SurfaceHolder holder;
+    //public Context context;
+    public Boolean ready;
 
 
     public GameView(Context context) {
@@ -25,6 +27,8 @@ public class GameView extends SurfaceView {
     public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        ready = false;
+
         holder = getHolder();
 
         holder.addCallback(new SurfaceHolder.Callback() {
@@ -36,6 +40,8 @@ public class GameView extends SurfaceView {
             @Override
 
             public void surfaceCreated(SurfaceHolder holder) {
+
+                ready = true;
 
                 Canvas c = holder.lockCanvas(null);
 
@@ -54,16 +60,6 @@ public class GameView extends SurfaceView {
         });
 
         bmp = BitmapFactory.decodeResource(getResources(), R.drawable.pause_button);
-    }
-
-    @Override
-
-    protected void onDraw(Canvas canvas) {
-
-        canvas.drawColor(Color.BLUE);
-
-        canvas.drawBitmap(bmp, 10, 10, null);
-
     }
 
 }
