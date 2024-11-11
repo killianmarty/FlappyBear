@@ -12,7 +12,6 @@ public class Game extends Thread {
     public Renderer renderer;
 
     //Frame managment
-    //static interval;
     public long lastFrameDate;
 
     //Playing & Pausing managment
@@ -25,7 +24,7 @@ public class Game extends Thread {
 
     ///////////////////////////
 
-    public final long FPS = 10;
+    //public final long FPS = 10;
     public GameView view;
 
 
@@ -67,7 +66,7 @@ public class Game extends Thread {
     public void resetGame(){
         Sprite.reset();
         player = new Player(0, 50, 30, 20, 60, 0);
-        //lastFrameDaye = Date.now();
+        lastFrameDate = System.currentTimeMillis();
     
         resetDisplay();
     }
@@ -151,9 +150,6 @@ public class Game extends Thread {
 
     public void setRunning(boolean run) {
         playing = run;
-
-        // new Baloon(300, 300);
-        // System.out.println(Sprite.sprites);
     }
 
     @Override

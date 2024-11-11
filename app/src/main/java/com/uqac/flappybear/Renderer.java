@@ -39,8 +39,7 @@ public class Renderer {
 
     private void drawTexture(Bitmap texture, Position position, double orientation){
         synchronized (surfaceView.getHolder()) {
-            //surfaceView.onDraw(canvas);
-            canvas.drawBitmap(texture, 10, 10, null);
+            canvas.drawBitmap(texture, Position.x, position.y, null);
         }
     }
 
