@@ -5,8 +5,8 @@ class Building extends Sprite{
     static SpriteAttributes select(){
         double w;
         double h;
-        Integer texture;
-        switch(Math.floor(Math.random()*14)){
+        int texture;
+        switch((int)(Math.random()*14)){
             case 0:
                 w=75;
                 h=38;
@@ -76,6 +76,11 @@ class Building extends Sprite{
                 w=46;
                 h=82;
                 texture = R.drawable.tower9;
+                break;
+            default:
+                w = 0;
+                h = 0;
+                texture = 0;
                 break;
         }
         return new SpriteAttributes(w, h, texture);

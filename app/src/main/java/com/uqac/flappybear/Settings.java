@@ -1,7 +1,7 @@
 package com.uqac.flappybear;
 
 public class Settings {
-        //GLOBAL SETTINGS
+    //GLOBAL SETTINGS
     public static final int MAX_HEIGHT = 200;
     public static final int MAX_WIDTH = 600;
     public static final int GROUND_HEIGHT = 30;
@@ -23,4 +23,6 @@ public class Settings {
 
     //RENDERER SETTINGS
     public static final int PLAYER_DISPLAY_X = 20;
+    public static final int MAX_DISPLAY_WIDTH = MAX_WIDTH + PLAYER_DISPLAY_X;
+    public static final int MAX_DISPLAY_HEIGHT = MAX_HEIGHT + GROUND_HEIGHT;
 }

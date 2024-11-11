@@ -5,8 +5,8 @@ class Vegetation extends Sprite{
     static SpriteAttributes select(){
         double w;
         double h;
-        Integer texture;
-        switch(Math.floor(Math.random()*3)){
+        int texture;
+        switch((int)(Math.random()*3)){
             case 0:
                 w=17;
                 h=29;
@@ -21,6 +21,11 @@ class Vegetation extends Sprite{
                 w=25;
                 h=30;
                 texture = R.drawable.tree3;
+                break;
+            default:
+                w = 0;
+                h = 0;
+                texture = 0;
                 break;
         }
         return new SpriteAttributes(w, h, texture);

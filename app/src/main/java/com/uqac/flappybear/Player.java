@@ -1,10 +1,10 @@
 package com.uqac.flappybear;
 
 public class Player extends MovingSprite{
-    double fuel;
-    Boolean throttle;
-    Boolean landed;
-    int score;
+    public double fuel;
+    public Boolean throttle;
+    public Boolean landed;
+    public int score;
 
     public Player(double x, double y, double w, double h, double vx, double vy){
         super(x, y, w, h, vx, vy);
@@ -49,18 +49,18 @@ public class Player extends MovingSprite{
     }
 
     public void update(double dt){
-        this.updateTextures();
+        this.updateTextures(dt);
 
-        if (this.audio) {
-            double pitch = this.throttle ? 0.5 : 2;
-            float volume = this.orientation / (Settings.MAX_UP_ROTATION * 3) + 0.8;
-            if(volume > 1) volume = 1;
-            if(volume < 0) volume = 0;
-            // this.audio.playbackRate = pitch;
-            // this.audio.volume = volume;
-        }
+//        if (this.audio) {
+//            double pitch = this.throttle ? 0.5 : 2;
+//            float volume = this.orientation / (Settings.MAX_UP_ROTATION * 3) + 0.8;
+//            if(volume > 1) volume = 1;
+//            if(volume < 0) volume = 0;
+//            // this.audio.playbackRate = pitch;
+//            // this.audio.volume = volume;
+//        }
 
-        if(Game.playing && !Game.paused){
+        if(Game.game.playing && !Game.game.paused){
 
             if(this.throttle && this.orientation < Settings.MAX_UP_ROTATION && this.fuel > 0){
                 this.fuel -= Settings.FUEL_PERCENT_PER_SECOND * dt;
@@ -76,12 +76,12 @@ public class Player extends MovingSprite{
         this.y += this.vy*dt;
 
         this.orientation = Math.atan(this.vy/this.vx);
-        if(Game.playing && !Game.paused) this.score += this.vx * dt * Settings.SCORE_PER_PIXEL;
+        if(Game.game.playing && !Game.game.paused) this.score += (int)(this.vx * dt * Settings.SCORE_PER_PIXEL);
 
         
         //Landing managment
         if(this.landed){
-            this.fuel = Math.min(this.fuel + Settings.REFUEL_PERCENT_PER_SECOND * dt);
+            this.fuel += Settings.REFUEL_PERCENT_PER_SECOND * dt;
             this.y=0;
             this.vy = 0;
             this.orientation = 0;

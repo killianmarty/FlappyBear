@@ -14,10 +14,14 @@ class Airport extends Sprite{
     }
 
     public void collide(Sprite sprite){
-        sprite.landed = (sprite.y <= 0 && sprite.vy > GROUND_CRASH_SEIL);
+        if(sprite instanceof Player) {
+            ((Player)sprite).landed = (((Player)sprite).y <= 0 && ((Player)sprite).vy > Settings.GROUND_CRASH_SEIL);
+        }
     }
 
     public void uncollide(Sprite sprite){
-        sprite.landed = false;
+        if(sprite instanceof Player) {
+            ((Player)sprite).landed = false;
+        }
     }
 }

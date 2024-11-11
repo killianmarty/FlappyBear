@@ -4,11 +4,11 @@ class Mountain extends Sprite{
 
     static double lastRightBoundX = 0;
 
-    static Object[] select(){
+    static SpriteAttributes select(){
         double w;
         double h;
-        Integer texture;
-        switch(Math.floor(Math.random()*5) + 1){
+        int texture;
+        switch((int)(Math.random()*5) + 1){
             case 1:
                 w=384;
                 h=100;
@@ -35,6 +35,9 @@ class Mountain extends Sprite{
                 texture = R.drawable.mountain5;
                 break;
             default:
+                w = 0;
+                h = 0;
+                texture = 0;
                 break;
         }
         return new SpriteAttributes(w, h, texture);

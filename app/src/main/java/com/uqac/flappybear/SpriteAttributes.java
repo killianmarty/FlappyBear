@@ -1,3 +1,5 @@
+package com.uqac.flappybear;
+
 public class SpriteAttributes {
     public double w;
     public double h;

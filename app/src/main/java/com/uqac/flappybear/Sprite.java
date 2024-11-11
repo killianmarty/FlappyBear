@@ -19,7 +19,7 @@ public class Sprite {
     double w;
     double h;
 
-    float orientation;
+    double orientation;
     ArrayList<Integer> textures;
     int textureChangeFrequency;
     int currentTextureIndex;
@@ -96,7 +96,7 @@ public class Sprite {
     }
 
     void collide(Sprite sprite){
-        Game.endGame();
+        Game.game.endGame();
         return;
     }
 
