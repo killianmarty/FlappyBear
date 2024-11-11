@@ -27,7 +27,6 @@ public class Game extends Thread {
 
     public final long FPS = 10;
     public GameView view;
-    private boolean running = false;
 
 
     public Game(GameView view) {
@@ -151,10 +150,10 @@ public class Game extends Thread {
     }
 
     public void setRunning(boolean run) {
-        running = run;
+        playing = run;
 
-        new Baloon(300, 300);
-        System.out.println(Sprite.sprites);
+        // new Baloon(300, 300);
+        // System.out.println(Sprite.sprites);
     }
 
     @Override
@@ -188,7 +187,7 @@ public class Game extends Thread {
 //
 //        }
 
-        while(running){
+        while(playing){
             frame();
         }
 
@@ -246,6 +245,8 @@ public class Game extends Thread {
         //Update DOM Score and Fuel level
 //        document.getElementById("score").innerText = "Score " + (Math.floor(player.score)).toString();
 //        document.getElementById("fuelLevel").style.width = parseFloat(player.fuel)+"%";
+    
+        sleep(10);
     }
 
     public void startMainLoop(){
