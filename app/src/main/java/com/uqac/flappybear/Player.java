@@ -48,6 +48,7 @@ public class Player extends MovingSprite{
         return (x + w >= sprite.x && x <= sprite.x + sprite.w && y + h >= sprite.y && y <= sprite.y + sprite.h);
     }
 
+    @Override
     public void update(double dt){
         this.updateTextures(dt);
 

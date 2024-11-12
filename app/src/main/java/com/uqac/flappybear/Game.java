@@ -1,7 +1,10 @@
 package com.uqac.flappybear;
 
+import android.app.Activity;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceView;
+import android.widget.TextView;
 
 public class Game extends Thread {
 
@@ -26,14 +29,18 @@ public class Game extends Thread {
 
     //public final long FPS = 10;
     public GameView view;
+    public Activity activity;
 
 
-    public Game(GameView view) {
+    public Game(Activity activity, GameView view) {
 
         this.view = view;
+        this.activity = activity;
         renderer = new Renderer(view.getContext(), view);
 
         player = new Player(0, 50, 30, 20, 60, 0);
+
+        lastFrameDate = System.currentTimeMillis();
 
         game = this;
 
@@ -60,7 +67,7 @@ public class Game extends Thread {
         
         if(!muted) player.startAudio();
         
-        //startMainLoop();
+        startMainLoop();
     }
     
     public void resetGame(){
@@ -155,43 +162,16 @@ public class Game extends Thread {
     @Override
     public void run() {
 
-//        long ticksPS = 1000 / FPS;
-//
-//        long startTime;
-//
-//        long sleepTime;
-//
-//        while (running) {
-//
-//            startTime = System.currentTimeMillis();
-//
-//            renderer.render(player, Sprite.sprites, Sprite.backgroundSprites);
-//
-//            sleepTime = ticksPS-(System.currentTimeMillis() - startTime);
-//
-//            try {
-//
-//                if (sleepTime > 0)
-//
-//                    sleep(sleepTime);
-//
-//                else
-//
-//                    sleep(10);
-//
-//            } catch (Exception e) {}
-//
-//        }
-
-        while(playing){
-            frame();
+        while(true){
+            if(!isInterrupted()){
+                frame();
+            }
         }
 
     }
 
     public void frame(){
         double dt = computeDeltaTime();
-
         player.update(dt);
 
         //Generations
@@ -228,8 +208,12 @@ public class Game extends Thread {
 
             Sprite.sprites.get(i).update(dt);
 
-            if(player.checkCollide(Sprite.sprites.get(i))) Sprite.sprites.get(i).collide(player);
-            else Sprite.sprites.get(i).uncollide(player);
+            if(player.checkCollide(Sprite.sprites.get(i))){
+                Sprite.sprites.get(i).collide(player);
+            }
+            else{
+                Sprite.sprites.get(i).uncollide(player);
+            }
 
         }
 
@@ -239,10 +223,24 @@ public class Game extends Thread {
         renderer.render(player, Sprite.sprites, Sprite.backgroundSprites);
 
         //Update DOM Score and Fuel level
-//        document.getElementById("score").innerText = "Score " + (Math.floor(player.score)).toString();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)activity).updateScore((int)(player.score));
+            }
+        });
+
 //        document.getElementById("fuelLevel").style.width = parseFloat(player.fuel)+"%";
-    
-        sleep(10);
+
+        long execTime = System.currentTimeMillis() - lastFrameDate;
+        if(execTime < 16) {
+            try {
+                sleep(16 - execTime);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void startMainLoop(){
@@ -251,11 +249,12 @@ public class Game extends Thread {
     }
 
     public void stopMainLoop(){
-        stop();
+        interrupt();
     }
 
     public void startGame(){
         //Set playing and paused values
+        System.out.println("lace");
         playing = true;
         paused = false;
 
@@ -264,7 +263,12 @@ public class Game extends Thread {
         //Note: we don't need to start the main loop because it's already running because of the prelaunch animation
 
         //Hide the menu
-        //document.getElementById("menu").style.display = "none";
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)activity).hideMenu();
+            }
+        });
     }
 
     public void restartGame(){
@@ -279,7 +283,12 @@ public class Game extends Thread {
         startMainLoop();
 
         //Hide the menu
-        //document.getElementById("menu").style.display = "none";
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)activity).hideMenu();
+            }
+        });
     }
 
     public void endGame(){
@@ -291,11 +300,13 @@ public class Game extends Thread {
 
         stopMainLoop();
 
-        //Show the menu
-//        document.getElementById("menuTitle").innerText = "Game Over";
-//        document.getElementById("menuStartBtn").onclick = ()=>{this.restartGame()};
-//        document.getElementById("menuStartBtn").src = "assets/gui/restart_button.png";
-//        document.getElementById("menu").style.display = "flex";
+        //Show the restart menu
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)activity).showRestartMenu();
+            }
+        });
     }
 
     public void pauseGame(){
@@ -305,10 +316,13 @@ public class Game extends Thread {
 
         stopMainLoop();
 
-//        document.getElementById("menuTitle").innerText = "Paused";
-//        document.getElementById("menuStartBtn").onclick = ()=>resumeGame();
-//        document.getElementById("menuStartBtn").src = "assets/gui/play_button.png";
-//        document.getElementById("menu").style.display = "flex";
+        //Show the pause menu
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)activity).showPauseMenu();
+            }
+        });
     }
 
     public void resumeGame(){
@@ -318,6 +332,12 @@ public class Game extends Thread {
 
         startMainLoop();
 
-        //document.getElementById("menu").style.display = "none";
+        //Hide the menu
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((MainActivity)activity).hideMenu();
+            }
+        });
     }
 }

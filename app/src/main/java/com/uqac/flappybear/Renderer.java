@@ -31,7 +31,7 @@ public class Renderer {
 
     private Position getDisplayPosition(double x, double y, double w, double h){
         double newX = (x + Settings.PLAYER_DISPLAY_X) * this.verticalRatio;
-        double newY = (Settings.MAX_HEIGHT - y - h)* this.verticalRatio;
+        double newY = (Settings.MAX_HEIGHT - Settings.GROUND_HEIGHT - y - h) * this.verticalRatio;
         double newW = w * this.verticalRatio;
         double newH = h * this.verticalRatio;
         return new Position(newX, newY, newW, newH);
@@ -39,14 +39,17 @@ public class Renderer {
 
     private void drawTexture(Bitmap texture, Position position, double orientation){
         synchronized (surfaceView.getHolder()) {
-            canvas.drawBitmap(texture, Position.x, position.y, null);
+            canvas.save();
+            canvas.rotate((float)orientation);
+            canvas.drawBitmap(texture, (float)position.x, (float)position.y, null);
+            canvas.restore();
         }
     }
 
     private void renderBackground(){
 
         synchronized (surfaceView.getHolder()) {
-            canvas.drawColor(Color.BLUE);
+            canvas.drawColor(Color.rgb(204,246,255));
         }
     }
 
@@ -54,11 +57,18 @@ public class Renderer {
 
         synchronized (surfaceView.getHolder()) {
             Paint greenPaint = new Paint();
-            greenPaint.setColor(Color.rgb(0, 255, 0));
+            greenPaint.setColor(Color.rgb(0, 150, 0));
             greenPaint.setStyle(Paint.Style.FILL);
             greenPaint.setStrokeWidth(10);
-            canvas.drawRect(new Rect(surfaceView.getLeft(), surfaceView.getHeight() -  Settings.GROUND_HEIGHT * surfaceView.getHeight() / Settings.MAX_HEIGHT, surfaceView.getRight(), surfaceView.getBottom()), greenPaint);
+            canvas.drawRect(new Rect(surfaceView.getLeft(), (int)(surfaceView.getHeight() -  Settings.GROUND_HEIGHT * verticalRatio), surfaceView.getRight(), surfaceView.getBottom()), greenPaint);
         }
+    }
+
+    private void renderPlayer(Player player){
+        Position playerDisplayPos = this.getDisplayPosition(0, player.y, player.w, player.h);
+        Bitmap texture = BitmapFactory.decodeResource(context.getResources(), player.currentTexture);
+        texture = Bitmap.createScaledBitmap(texture, (int)playerDisplayPos.w, (int)playerDisplayPos.h, true);
+        this.drawTexture(texture, playerDisplayPos, -player.orientation);
     }
 
     private void renderSprite(Sprite sprite, double referenceX){
@@ -72,7 +82,7 @@ public class Renderer {
         this.horizontalRatio = (double) surfaceView.getWidth() / Settings.MAX_WIDTH;
         this.verticalRatio = (double) surfaceView.getHeight() / Settings.MAX_HEIGHT;
 
-        double referenceX = 50;
+        double referenceX = player.x;
 
         if(!surfaceView.ready){
             return;
@@ -83,10 +93,18 @@ public class Renderer {
             canvas = surfaceView.getHolder().lockCanvas();
 
             renderBackground();
+
+            for (int i = 0; i < backgroundSprites.size(); i++) {
+                renderSprite(backgroundSprites.get(i), referenceX);
+            }
+
             renderGround();
+
             for (int i = 0; i < sprites.size(); i++) {
                 renderSprite(sprites.get(i), referenceX);
             }
+
+            renderPlayer(Game.game.player);
 
         }catch (Exception e){
             e.printStackTrace();

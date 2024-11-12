@@ -3,4 +3,6 @@
     <string name="pause_button">Pause</string>
     <string name="audio_button">Couper/rétablir le son</string>
     <string name="start_button">Lancer le jeu</string>
+    <string name="gameOver_text">Game Over !</string>
+    <string name="paused_text">Paused</string>
 </resources>
