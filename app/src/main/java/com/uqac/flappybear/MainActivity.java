@@ -6,8 +6,10 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
+import android.widget.ActionMenuView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -71,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.score)).setText("Score : " + newScore.toString());
     }
 
+    public void updateFuel(int newFuel){
+        ((ProgressBar)findViewById(R.id.fuelBar)).setProgress(newFuel);
+    }
+
     public void hideMenu() {
         ((LinearLayout)findViewById(R.id.menu)).setVisibility(View.GONE);
     }
@@ -78,10 +84,13 @@ public class MainActivity extends AppCompatActivity {
     public void showRestartMenu(){
         ((TextView)findViewById(R.id.menuTitle)).setText(R.string.gameOver_text);
         ImageView imageView = ((ImageView)findViewById(R.id.menuStartBtn));
+        MainActivity act = this;
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                game.restartGame();
+                game = new Game(act, (GameView)findViewById(R.id.canvas));
+                game.initGame();
+                game.startGame();
             }
         });
         imageView.setImageResource(R.drawable.restart_button);

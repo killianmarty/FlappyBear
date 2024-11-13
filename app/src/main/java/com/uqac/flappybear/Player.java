@@ -4,7 +4,7 @@ public class Player extends MovingSprite{
     public double fuel;
     public Boolean throttle;
     public Boolean landed;
-    public int score;
+    public double score;
 
     public Player(double x, double y, double w, double h, double vx, double vy){
         super(x, y, w, h, vx, vy);
@@ -77,7 +77,7 @@ public class Player extends MovingSprite{
         this.y += this.vy*dt;
 
         this.orientation = Math.atan(this.vy/this.vx);
-        if(Game.game.playing && !Game.game.paused) this.score += (int)(this.vx * dt * Settings.SCORE_PER_PIXEL);
+        if(Game.game.playing && !Game.game.paused) this.score += this.vx * dt * Settings.SCORE_PER_PIXEL;
 
         
         //Landing managment

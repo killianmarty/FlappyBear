@@ -45,21 +45,8 @@ public class Game extends Thread {
         game = this;
 
     }
-
-    public void initInputs(){
-        // let canvas = document.getElementById("canvas");
-    
-        // canvas.addEventListener("mousedown", ()=>{player.throttle = true});
-        // canvas.addEventListener('mouseup', ()=>{player.throttle = false});
-    
-        // canvas.addEventListener("touchstart", ()=>{player.throttle = true});
-        // canvas.addEventListener("touchend", ()=>{player.throttle = false});
-    
-        // window.addEventListener("resize", ()=>{resetDisplay()});
-    }
     
     public void initGame(){
-        initInputs();
         resetGame();
     
         // gameOverSound = document.createElement("audio");
@@ -79,9 +66,6 @@ public class Game extends Thread {
     }
     
     public void resetDisplay(){
-        // let canvas = document.getElementById("canvas");
-        // canvas.width = canvas.offsetWidth;
-        // canvas.height = canvas.offsetHeight;
         renderer = new Renderer(view.getContext(), view);
     }
     
@@ -229,10 +213,9 @@ public class Game extends Thread {
             @Override
             public void run() {
                 ((MainActivity)activity).updateScore((int)(player.score));
+                ((MainActivity)activity).updateFuel((int)player.fuel);
             }
         });
-
-//        document.getElementById("fuelLevel").style.width = parseFloat(player.fuel)+"%";
 
         long execTime = System.currentTimeMillis() - lastFrameDate;
         if(execTime < 16) {
@@ -263,26 +246,6 @@ public class Game extends Thread {
         if(!muted) player.startAudio();
 
         //Note: we don't need to start the main loop because it's already running because of the prelaunch animation
-
-        //Hide the menu
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ((MainActivity)activity).hideMenu();
-            }
-        });
-    }
-
-    public void restartGame(){
-        resetGame();
-
-        //Set playing and paused values
-        playing = true;
-        paused = false;
-
-        if(!muted) player.startAudio();
-
-        startMainLoop();
 
         //Hide the menu
         activity.runOnUiThread(new Runnable() {
