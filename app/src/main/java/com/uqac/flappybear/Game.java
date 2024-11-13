@@ -172,6 +172,8 @@ public class Game extends Thread {
 
     public void frame(){
         double dt = computeDeltaTime();
+
+        player.throttle = Inputs.touchDown;
         player.update(dt);
 
         //Generations

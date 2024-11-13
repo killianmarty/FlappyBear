@@ -58,7 +58,8 @@
         android:orientation="vertical"
         android:padding="15dp"
         tools:layout_editor_absoluteX="605dp"
-        tools:layout_editor_absoluteY="16dp">
+        tools:layout_editor_absoluteY="16dp"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Barre de carburant -->
         <RelativeLayout

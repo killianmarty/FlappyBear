@@ -40,7 +40,7 @@ public class Renderer {
     private void drawTexture(Bitmap texture, Position position, double orientation){
         synchronized (surfaceView.getHolder()) {
             canvas.save();
-            canvas.rotate((float)orientation);
+            canvas.rotate((float)(orientation * 180 / Math.PI), (float)(position.x + position.w/2), (float)(position.y + position.h/2));
             canvas.drawBitmap(texture, (float)position.x, (float)position.y, null);
             canvas.restore();
         }

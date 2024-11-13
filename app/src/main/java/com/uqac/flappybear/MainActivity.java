@@ -1,6 +1,7 @@
 package com.uqac.flappybear;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -38,6 +39,29 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 game.startGame();
+            }
+        });
+
+        ((GameView)findViewById(R.id.canvas)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Obtenir les coordonnées du toucher
+                float touchX = event.getX();
+                float touchY = event.getY();
+
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Inputs.touchDown = true;
+                        break;
+
+
+                    case MotionEvent.ACTION_UP:
+                        Inputs.touchDown = false;
+                        break;
+                }
+
+                // Retourner true pour indiquer que l'événement a été consommé
+                return true;
             }
         });
 
