@@ -1,8 +1,6 @@
 package com.uqac.flappybear;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -10,7 +8,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
-    private Bitmap bmp;
     private SurfaceHolder holder;
     //public Context context;
     public Boolean ready;
@@ -59,7 +56,6 @@ public class GameView extends SurfaceView {
 
         });
 
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.pause_button);
     }
 
 }
