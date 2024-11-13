@@ -37,7 +37,14 @@ public class Renderer {
         return new Position(newX, newY, newW, newH);
     }
 
-    private void drawTexture(Bitmap texture, Position position, double orientation){
+    private void drawTexture(Integer textureId, Position position, double orientation){
+        //Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
+        if(!Sprite.textureCache.containsKey(textureId)){
+            Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
+            Sprite.textureCache.put(textureId, texture);
+        }
+        Bitmap texture = Sprite.textureCache.get(textureId);
+        texture = Bitmap.createScaledBitmap(texture, (int)position.w, (int)position.h, true);
         synchronized (surfaceView.getHolder()) {
             canvas.save();
             canvas.rotate((float)(orientation * 180 / Math.PI), (float)(position.x + position.w/2), (float)(position.y + position.h/2));
@@ -66,16 +73,12 @@ public class Renderer {
 
     private void renderPlayer(Player player){
         Position playerDisplayPos = this.getDisplayPosition(0, player.y, player.w, player.h);
-        Bitmap texture = BitmapFactory.decodeResource(context.getResources(), player.currentTexture);
-        texture = Bitmap.createScaledBitmap(texture, (int)playerDisplayPos.w, (int)playerDisplayPos.h, true);
-        this.drawTexture(texture, playerDisplayPos, -player.orientation);
+        this.drawTexture(player.currentTexture, playerDisplayPos, -player.orientation);
     }
 
     private void renderSprite(Sprite sprite, double referenceX){
         Position spriteDisplayPos = getDisplayPosition(sprite.x - referenceX, sprite.y, sprite.w, sprite.h);
-        Bitmap texture = BitmapFactory.decodeResource(context.getResources(), sprite.currentTexture);
-        texture = Bitmap.createScaledBitmap(texture, (int)spriteDisplayPos.w, (int)spriteDisplayPos.h, true);
-        this.drawTexture(texture, spriteDisplayPos, sprite.orientation);
+        this.drawTexture(sprite.currentTexture, spriteDisplayPos, sprite.orientation);
     }
 
     public void render(Player player, ArrayList<Sprite> sprites, ArrayList<Sprite> backgroundSprites){

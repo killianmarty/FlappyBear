@@ -14,6 +14,8 @@ public class Sprite {
     static int lastGeneration = 0;
     static double generationFrequency = Settings.MIN_GENERATION_FREQUENCY;
 
+    static public HashMap<Integer, Bitmap> textureCache = new HashMap<Integer, Bitmap>();
+
     double x;
     double y;
     double w;
@@ -115,6 +117,10 @@ public class Sprite {
 //        this.textures.add(Sprite.textureCache[src]);
 //        this.currentTextureIndex = 0;
 //        this.currentTexture = this.textures[0];
+        if(!textureCache.containsKey(drawableId)){
+            Bitmap texture = BitmapFactory.decodeResource(Game.game.getResources(), drawableId);
+            textureCache.put(drawableId, texture);
+        }
         textures.add(drawableId);
         currentTextureIndex = 0;
         currentTexture = textures.get(0);
