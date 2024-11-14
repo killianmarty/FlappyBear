@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.HashMap;
 
 public class Renderer {
+
+    static public HashMap<Integer, Bitmap> textureCache = new HashMap<Integer, Bitmap>();
+
     private GameView surfaceView;
     private Context context;
     private Canvas canvas;
@@ -39,12 +42,13 @@ public class Renderer {
     }
 
     private void drawTexture(Integer textureId, Position position, double orientation){
-        //Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
-        if(!Sprite.textureCache.containsKey(textureId)){
+        
+        if(!Renderer.textureCache.containsKey(textureId)){
             Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
             Sprite.textureCache.put(textureId, texture);
         }
-        Bitmap texture = Sprite.textureCache.get(textureId);
+
+        Bitmap texture = Renderer.textureCache.get(textureId);
         texture = Bitmap.createScaledBitmap(texture, (int)position.w, (int)position.h, true);
         synchronized (surfaceView.getHolder()) {
             canvas.save();

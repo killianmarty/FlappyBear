@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 public class Sprite {
 
@@ -14,8 +13,6 @@ public class Sprite {
 
     static int lastGeneration = 0;
     static double generationFrequency = Settings.MIN_GENERATION_FREQUENCY;
-
-    static public HashMap<Integer, Bitmap> textureCache = new HashMap<Integer, Bitmap>();
 
     double x;
     double y;
@@ -109,19 +106,6 @@ public class Sprite {
 
     void addTexture(Integer drawableId){
 
-//        if(!Sprite.textureCache[src]){
-//            let tmpTexture = new Image();
-//            tmpTexture.src = src;
-//            Sprite.textureCache[src] = tmpTexture;
-//        }
-//
-//        this.textures.add(Sprite.textureCache[src]);
-//        this.currentTextureIndex = 0;
-//        this.currentTexture = this.textures[0];
-        // if(!textureCache.containsKey(drawableId)){
-        //     Bitmap texture = BitmapFactory.decodeResource(Game.game.getResources(), drawableId);
-        //     textureCache.put(drawableId, texture);
-        // }
         textures.add(drawableId);
         currentTextureIndex = 0;
         currentTexture = textures.get(0);
