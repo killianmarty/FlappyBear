@@ -7,12 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-import android.view.SurfaceView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Renderer {
 
@@ -22,25 +21,44 @@ public class Renderer {
     private Context context;
     private Canvas canvas;
 
+    private int holderWidth;
+    private int holderHeight;
+
+    private double resolutionRatio = 0;
+
     public Renderer(Context context, GameView surfaceView){
         this.context = context;
         this.surfaceView = surfaceView;
+
+        this.loadAllTextures();
+    }
+
+    private void loadAllTextures(){
+        try {
+            Field[] fields = R.drawable.class.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getType().equals(int.class)) {
+                    int textureId = field.getInt(null);
+                    if(!Renderer.textureCache.containsKey(textureId)){
+                        Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
+                        Renderer.textureCache.put(textureId, texture);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Position getDisplayPosition(double x, double y, double w, double h){
-        double newX = (x + Settings.PLAYER_DISPLAY_X);
-        double newY = (Settings.MAX_HEIGHT - Settings.GROUND_HEIGHT - y - h);
-        double newW = w;
-        double newH = h;
+        double newX = (x + Settings.PLAYER_DISPLAY_X) * resolutionRatio;
+        double newY = (Settings.MAX_HEIGHT - Settings.GROUND_HEIGHT - y - h) * resolutionRatio;
+        double newW = w * resolutionRatio;
+        double newH = h * resolutionRatio;
         return new Position(newX, newY, newW, newH);
     }
 
     private void drawTexture(Integer textureId, Position position, double orientation){
-
-        if(!Renderer.textureCache.containsKey(textureId)){
-            Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
-            Renderer.textureCache.put(textureId, texture);
-        }
 
         Bitmap texture = Renderer.textureCache.get(textureId);
         texture = Bitmap.createScaledBitmap(texture, (int)position.w, (int)position.h, true);
@@ -67,7 +85,7 @@ public class Renderer {
             greenPaint.setColor(Color.rgb(0, 150, 0));
             greenPaint.setStyle(Paint.Style.FILL);
             greenPaint.setStrokeWidth(10);
-            canvas.drawRect(new Rect(0, (int)(Settings.MAX_HEIGHT -  Settings.GROUND_HEIGHT), Settings.MAX_WIDTH, Settings.MAX_HEIGHT), greenPaint);
+            canvas.drawRect(new Rect(0, (int)((Settings.MAX_HEIGHT -  Settings.GROUND_HEIGHT) * resolutionRatio), (int)(Settings.MAX_WIDTH * resolutionRatio), (int)(Settings.MAX_HEIGHT * resolutionRatio)), greenPaint);
         }
     }
 
@@ -83,14 +101,19 @@ public class Renderer {
 
     public void render(Player player, ArrayList<Sprite> sprites, ArrayList<Sprite> backgroundSprites){
 
-        double referenceX = player.x;
-
         if(!surfaceView.ready){
             return;
         }
 
-        canvas = null;
+        double referenceX = player.x;
+
+        this.holderHeight = surfaceView.getHeight();
+        this.holderWidth = surfaceView.getWidth();
+
+        this.resolutionRatio = (double)holderHeight / Settings.MAX_HEIGHT;
+
         try {
+            surfaceView.getHolder().setFixedSize(holderWidth, holderHeight);
             canvas = surfaceView.getHolder().lockCanvas();
 
             renderBackground();

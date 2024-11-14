@@ -1,5 +1,6 @@
 package com.uqac.flappybear;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -17,12 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
-
-    //@Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//    }
 
     private Game game;
 
@@ -47,9 +42,6 @@ public class MainActivity extends AppCompatActivity {
         ((GameView)findViewById(R.id.canvas)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // Obtenir les coordonnées du toucher
-                float touchX = event.getX();
-                float touchY = event.getY();
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
@@ -62,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-                // Retourner true pour indiquer que l'événement a été consommé
                 return true;
             }
         });

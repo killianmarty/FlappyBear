@@ -39,8 +39,7 @@ public class GameView extends SurfaceView {
             public void surfaceCreated(SurfaceHolder holder) {
 
                 ready = true;
-
-                holder.setFixedSize(Settings.MAX_WIDTH, Settings.MAX_HEIGHT);
+                //holder.setFixedSize(Settings.MAX_WIDTH, Settings.MAX_HEIGHT);
 
             }
 
