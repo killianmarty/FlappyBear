@@ -42,7 +42,7 @@ public class Renderer {
     }
 
     private void drawTexture(Integer textureId, Position position, double orientation){
-        
+
         if(!Renderer.textureCache.containsKey(textureId)){
             Bitmap texture = BitmapFactory.decodeResource(context.getResources(), textureId);
             Sprite.textureCache.put(textureId, texture);
@@ -50,6 +50,7 @@ public class Renderer {
 
         Bitmap texture = Renderer.textureCache.get(textureId);
         texture = Bitmap.createScaledBitmap(texture, (int)position.w, (int)position.h, true);
+        
         synchronized (surfaceView.getHolder()) {
             canvas.save();
             canvas.rotate((float)(orientation * 180 / Math.PI), (float)(position.x + position.w/2), (float)(position.y + position.h/2));

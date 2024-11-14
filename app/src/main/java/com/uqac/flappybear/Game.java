@@ -170,6 +170,9 @@ public class Game extends Thread {
             generateAirport();
         }
 
+        System.out.println("Nb of background sprites: " + Sprite.backgroundSprites.size());
+        System.out.println("Nb of sprites: " + Sprite.sprites.size());
+
         //Background Sprites loop
         for (int i = 0; i < Sprite.backgroundSprites.size(); i++) {
 
