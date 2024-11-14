@@ -40,17 +40,11 @@ public class GameView extends SurfaceView {
 
                 ready = true;
 
-                // Canvas c = holder.lockCanvas(null);
-
-                // onDraw(c);
-
-                // holder.unlockCanvasAndPost(c);
-
                 holder.setFixedSize(Settings.MAX_WIDTH, Settings.MAX_HEIGHT);
 
             }
 
-            @Overrides
+            @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
             }
