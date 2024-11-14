@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Sprite {
 
@@ -117,10 +118,10 @@ public class Sprite {
 //        this.textures.add(Sprite.textureCache[src]);
 //        this.currentTextureIndex = 0;
 //        this.currentTexture = this.textures[0];
-        if(!textureCache.containsKey(drawableId)){
-            Bitmap texture = BitmapFactory.decodeResource(Game.game.getResources(), drawableId);
-            textureCache.put(drawableId, texture);
-        }
+        // if(!textureCache.containsKey(drawableId)){
+        //     Bitmap texture = BitmapFactory.decodeResource(Game.game.getResources(), drawableId);
+        //     textureCache.put(drawableId, texture);
+        // }
         textures.add(drawableId);
         currentTextureIndex = 0;
         currentTexture = textures.get(0);
