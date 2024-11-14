@@ -29,13 +29,13 @@ public class GameView extends SurfaceView {
         holder = getHolder();
 
         holder.addCallback(new SurfaceHolder.Callback() {
-            @Override
 
+            @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
 
             }
-            @Override
 
+            @Override
             public void surfaceCreated(SurfaceHolder holder) {
 
                 ready = true;
@@ -50,8 +50,7 @@ public class GameView extends SurfaceView {
 
             }
 
-            @Override
-
+            @Overrides
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
             }
