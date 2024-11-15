@@ -1,10 +1,10 @@
 package com.uqac.flappybear;
 
 public class Player extends MovingSprite{
-    public double fuel;
-    public Boolean throttle;
-    public Boolean landed;
-    public double score;
+    private double fuel;
+    private Boolean throttle;
+    private Boolean landed;
+    private double score;
 
     public Player(double x, double y, double w, double h, double vx, double vy){
         super(x, y, w, h, vx, vy);
@@ -45,7 +45,7 @@ public class Player extends MovingSprite{
         double y = this.y + this.h * verticalReduction/2;
         double w = this.w * (1-horizontalReduction);
         double h = this.h * (1-verticalReduction);
-        return (x + w >= sprite.x && x <= sprite.x + sprite.w && y + h >= sprite.y && y <= sprite.y + sprite.h);
+        return (x + w >= sprite.getX() && x <= sprite.getX() + sprite.getWidth() && y + h >= sprite.getY() && y <= sprite.getY() + sprite.getHeight());
     }
 
     @Override
@@ -89,11 +89,27 @@ public class Player extends MovingSprite{
         }
 
         //Max height managment
-        if(this.y + this.h > Settings.MAX_HEIGHT){
-            this.y = Settings.MAX_HEIGHT - this.h;
+        if(this.y + this.h + Settings.GROUND_HEIGHT > Settings.MAX_HEIGHT){
+            this.y = Settings.MAX_HEIGHT - this.h - Settings.GROUND_HEIGHT;
             this.vy = 0;
             this.orientation = 0;
         }
 
+    }
+
+    public double getFuel(){
+        return fuel;
+    }
+
+    public void setThrottle(Boolean value){
+        throttle = value;
+    }
+
+    public void setLanded(Boolean value){
+        landed = value;
+    }
+
+    public double getScore(){
+        return score;
     }
 }

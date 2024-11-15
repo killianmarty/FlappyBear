@@ -17,8 +17,8 @@ public class Renderer {
 
     static public HashMap<Integer, Bitmap> textureCache = new HashMap<Integer, Bitmap>();
 
-    private GameView surfaceView;
-    private Context context;
+    private final GameView surfaceView;
+    private final Context context;
     private Canvas canvas;
 
     private int holderWidth;
@@ -50,23 +50,29 @@ public class Renderer {
         }
     }
 
-    private Position getDisplayPosition(double x, double y, double w, double h){
+//    private Position getDisplayPosition(double x, double y, double w, double h){
+//        double newX = (x + Settings.PLAYER_DISPLAY_X) * resolutionRatio;
+//        double newY = (Settings.MAX_HEIGHT - Settings.GROUND_HEIGHT - y - h) * resolutionRatio;
+//        double newW = w * resolutionRatio;
+//        double newH = h * resolutionRatio;
+//        return new Position(newX, newY, newW, newH);
+//    }
+
+    private void drawTexture(Integer textureId, double x, double y, double w, double h, double orientation){
+
+        //get display position
         double newX = (x + Settings.PLAYER_DISPLAY_X) * resolutionRatio;
         double newY = (Settings.MAX_HEIGHT - Settings.GROUND_HEIGHT - y - h) * resolutionRatio;
         double newW = w * resolutionRatio;
         double newH = h * resolutionRatio;
-        return new Position(newX, newY, newW, newH);
-    }
-
-    private void drawTexture(Integer textureId, Position position, double orientation){
 
         Bitmap texture = Renderer.textureCache.get(textureId);
-        texture = Bitmap.createScaledBitmap(texture, (int)position.w, (int)position.h, true);
+        texture = Bitmap.createScaledBitmap(texture, (int)newW, (int)newH, true);
         
         synchronized (surfaceView.getHolder()) {
             canvas.save();
-            canvas.rotate((float)(orientation * 180 / Math.PI), (float)(position.x + position.w/2), (float)(position.y + position.h/2));
-            canvas.drawBitmap(texture, (float)position.x, (float)position.y, null);
+            canvas.rotate((float)(orientation * 180 / Math.PI), (float)(newX + newW/2), (float)(newY + newH/2));
+            canvas.drawBitmap(texture, (float)newX, (float)newY, null);
             canvas.restore();
         }
     }
@@ -90,22 +96,22 @@ public class Renderer {
     }
 
     private void renderPlayer(Player player){
-        Position playerDisplayPos = this.getDisplayPosition(0, player.y, player.w, player.h);
-        this.drawTexture(player.currentTexture, playerDisplayPos, -player.orientation);
+        //Position playerDisplayPos = this.getDisplayPosition(0, player.getY(), player.getWidth(), player.getHeight());
+        this.drawTexture(player.getCurrentTexture(), 0, player.getY(), player.getWidth(), player.getHeight(), -player.getOrientation());
     }
 
     private void renderSprite(Sprite sprite, double referenceX){
-        Position spriteDisplayPos = getDisplayPosition(sprite.x - referenceX, sprite.y, sprite.w, sprite.h);
-        this.drawTexture(sprite.currentTexture, spriteDisplayPos, sprite.orientation);
+        //Position spriteDisplayPos = getDisplayPosition(sprite.getX() - referenceX, sprite.getY(), sprite.getWidth(), sprite.getHeight());
+        this.drawTexture(sprite.getCurrentTexture(), sprite.getX() - referenceX, sprite.getY(), sprite.getWidth(), sprite.getHeight(), sprite.getOrientation());
     }
 
     public void render(Player player, ArrayList<Sprite> sprites, ArrayList<Sprite> backgroundSprites){
 
-        if(!surfaceView.ready){
+        if(!surfaceView.getReady()){
             return;
         }
 
-        double referenceX = player.x;
+        double referenceX = player.getX();
 
         this.holderHeight = surfaceView.getHeight();
         this.holderWidth = surfaceView.getWidth();

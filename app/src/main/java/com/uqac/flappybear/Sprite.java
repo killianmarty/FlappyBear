@@ -2,6 +2,7 @@ package com.uqac.flappybear;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Interpolator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,17 +15,18 @@ public class Sprite {
     static int lastGeneration = 0;
     static double generationFrequency = Settings.MIN_GENERATION_FREQUENCY;
 
-    double x;
-    double y;
-    double w;
-    double h;
+    protected double x;
+    protected double y;
+    protected double w;
+    protected double h;
+    protected double orientation;
 
-    double orientation;
-    ArrayList<Integer> textures;
-    int textureChangeFrequency;
-    int currentTextureIndex;
-    double currentTextureAge;
-    Integer currentTexture;
+    protected int textureChangeFrequency;
+
+    private ArrayList<Integer> textures;
+    private int currentTextureIndex;
+    private double currentTextureAge;
+    private Integer currentTexture;
 
     public Sprite(double x, double y, double w, double h){
         this.x = x;
@@ -40,12 +42,12 @@ public class Sprite {
         this.currentTexture = null;
     }
 
-    static void updateLastGenerationDate() {
+    private static void updateLastGenerationDate() {
         Date date = new Date();
         updateLastGenerationDate((int) date.getTime());
     }
 
-    static void updateLastGenerationDate(int generationDate){
+    private static void updateLastGenerationDate(int generationDate){
         Sprite.lastGeneration = generationDate;
         if(Sprite.generationFrequency < Settings.MAX_GENERATION_FREQUENCY){
             Sprite.generationFrequency += Settings.GENERATION_FREQUENCY_GAP;
@@ -92,16 +94,14 @@ public class Sprite {
     }
 
     Boolean checkCollide(Sprite sprite){
-        return (this.x + this.w >= sprite.x && this.x <= sprite.x + sprite.w && this.y + this.h >= sprite.y && this.y <= sprite.y + sprite.h);
+        return (this.x + this.w >= sprite.getX() && this.getX() <= sprite.getX() + sprite.getWidth() && this.y + this.h >= sprite.getY() && this.y <= sprite.getY() + sprite.getHeight());
     }
 
     void collide(Sprite sprite){
         Game.game.endGame();
-        return;
     }
 
     void uncollide(Sprite sprite){
-        return;
     }
 
     void addTexture(Integer drawableId){
@@ -116,4 +116,29 @@ public class Sprite {
         return this.x + this.w;
     }
 
+
+
+    public double getX(){
+        return x;
+    }
+
+    public double getY(){
+        return y;
+    }
+
+    public double getWidth(){
+        return w;
+    }
+
+    public double getHeight(){
+        return h;
+    }
+
+    public double getOrientation(){
+        return orientation;
+    }
+
+    public Integer getCurrentTexture(){
+        return currentTexture;
+    }
 }

@@ -90,10 +90,10 @@ class Building extends Sprite{
         super(x, y, 0, 0);
 
         SpriteAttributes attributes = Building.select();
-        this.w = attributes.w;
-        this.h = attributes.h;
+        this.w = attributes.getWidth();
+        this.h = attributes.getHeight();
         
-        this.addTexture(attributes.texture);
+        this.addTexture(attributes.getTexture());
 
         Sprite.pushSprite(this);
     }

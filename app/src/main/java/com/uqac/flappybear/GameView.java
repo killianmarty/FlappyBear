@@ -9,8 +9,7 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView {
     private SurfaceHolder holder;
-    //public Context context;
-    public Boolean ready;
+    private Boolean ready;
 
 
     public GameView(Context context) {
@@ -50,6 +49,10 @@ public class GameView extends SurfaceView {
 
         });
 
+    }
+
+    public Boolean getReady(){
+        return ready;
     }
 
 }

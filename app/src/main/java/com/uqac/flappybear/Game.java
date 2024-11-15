@@ -1,14 +1,13 @@
 package com.uqac.flappybear;
 
 import android.app.Activity;
-import android.graphics.Canvas;
-import android.util.Log;
-import android.view.SurfaceView;
-import android.widget.TextView;
+
+import java.util.Set;
 
 public class Game extends Thread {
 
     static Game game;
+    private final long period = 16; //(1/fps) ms
 
     //Globals
     public Player player;
@@ -27,10 +26,9 @@ public class Game extends Thread {
 
     ///////////////////////////
 
-    //public final long FPS = 10;
     public GameView view;
     public Activity activity;
-
+    private Boolean running = false;
 
     public Game(Activity activity, GameView view) {
 
@@ -53,7 +51,7 @@ public class Game extends Thread {
         // gameOverSound.src = "assets/audio/gameover.wav";
         
         if(!muted) player.startAudio();
-        
+        start();
         startMainLoop();
     }
     
@@ -77,10 +75,10 @@ public class Game extends Thread {
     }
     
     public void generateCloud(){
-        if(Cloud.lastRightBoundX < player.x + Settings.MAX_WIDTH*0.9 && Math.random() > 0.2){
+        if(Cloud.lastRightBoundX < player.getX() + Settings.MAX_WIDTH*0.9 && Math.random() > 0.2){
     
-            double x = player.x + Settings.MAX_DISPLAY_WIDTH;
-            double y = Math.random()*Settings.MAX_HEIGHT/0.5 + 1.5*Settings.GROUND_HEIGHT;
+            double x = player.getX() + Settings.MAX_DISPLAY_WIDTH;
+            double y = Math.random()*(Settings.MAX_HEIGHT - Settings.GROUND_HEIGHT)/0.5 + 0.5*Settings.GROUND_HEIGHT;
     
             new Cloud(x, y);
     
@@ -88,10 +86,10 @@ public class Game extends Thread {
     }
     
     public void generateBirds(){
-        if(Birds.lastRightBoundX < player.x + Settings.MAX_WIDTH*0.2 && Math.random() > 0.05){
+        if(Birds.lastRightBoundX < player.getX() + Settings.MAX_WIDTH*0.2 && Math.random() > 0.05){
     
-            double x = player.x + Settings.MAX_DISPLAY_WIDTH;
-            double y = Math.random()*Settings.MAX_HEIGHT/0.5 + 1.5*Settings.GROUND_HEIGHT;
+            double x = player.getX() + Settings.MAX_DISPLAY_WIDTH;
+            double y = Math.random()*Settings.MAX_HEIGHT/0.5 + 0.5*Settings.GROUND_HEIGHT;
     
             new Birds(x, y);
     
@@ -99,7 +97,7 @@ public class Game extends Thread {
     }
     
     public void generateMountain(){
-        double x = player.x + Settings.MAX_DISPLAY_WIDTH;
+        double x = player.getX() + Settings.MAX_DISPLAY_WIDTH;
         double y = -5;
         if(Mountain.lastRightBoundX < x && Math.random()<0.001){
             
@@ -109,11 +107,11 @@ public class Game extends Thread {
     }
     
     public void generateAirport(){
-        if(player.fuel < 25 && Airport.lastRightBoundX < player.x - 500){
+        if(player.getFuel() < 25 && Airport.lastRightBoundX < player.getX() - 500){
     
             double newAirportX = (Sprite.getLastSprite().getRightBoundX() + 10);
             if(newAirportX < Settings.MAX_DISPLAY_WIDTH){
-                newAirportX = player.x + Settings.MAX_DISPLAY_WIDTH;
+                newAirportX = player.getX() + Settings.MAX_DISPLAY_WIDTH;
             }
     
             new Airport(newAirportX, -7);
@@ -122,7 +120,7 @@ public class Game extends Thread {
     }
     
     public void generateSprite(){
-        double spawnX = player.x + Settings.MAX_DISPLAY_WIDTH;
+        double spawnX = player.getX() + Settings.MAX_DISPLAY_WIDTH;
     
         if(Sprite.getLastGenerationAge() > 1000/Sprite.generationFrequency){
             if(Sprite.sprites.isEmpty() || Sprite.getLastSprite().getRightBoundX() < spawnX){
@@ -131,7 +129,7 @@ public class Game extends Thread {
     
                 if(rand <= 14) new Building(spawnX, (-Math.random()*4));
                 else if(rand <= 17) new Vegetation(spawnX, -7);
-                else if(rand <= 18) new Baloon(spawnX, (Settings.MIN_VEHICLE_GENERATION_HEIGHT + Math.random() * Settings.VEHICLE_GENERATION_HEIGHT_GAP));
+                else if(rand <= 18) new Baloon(spawnX, (Settings.MIN_VEHICLE_GENERATION_HEIGHT + Math.random() * Settings.VEHICLE_GENERATION_HEIGHT_GAP) - Settings.GROUND_HEIGHT);
                 else if(rand <= 19) new Helicopter(spawnX, (Settings.MIN_VEHICLE_GENERATION_HEIGHT + Math.random() * Settings.VEHICLE_GENERATION_HEIGHT_GAP));
                 else if(rand <= 20) new FighterJet(spawnX, (Settings.MIN_VEHICLE_GENERATION_HEIGHT + Math.random() * Settings.VEHICLE_GENERATION_HEIGHT_GAP));
     
@@ -147,7 +145,7 @@ public class Game extends Thread {
     public void run() {
 
         while(true){
-            if(!isInterrupted()){
+            if(running){
                 frame();
             }
         }
@@ -157,7 +155,7 @@ public class Game extends Thread {
     public void frame(){
         double dt = computeDeltaTime();
 
-        player.throttle = Inputs.touchDown;
+        player.setThrottle(Inputs.getTouchDown());
         player.update(dt);
 
         //Generations
@@ -174,7 +172,7 @@ public class Game extends Thread {
         for (int i = 0; i < Sprite.backgroundSprites.size(); i++) {
 
             //Delete background sprite if not visible anymore
-            if(Sprite.backgroundSprites.get(i).x < player.x - 5000){
+            if(Sprite.backgroundSprites.get(i).getX() < player.getX() - 450){
                 Sprite.backgroundSprites.remove(i);
                 continue;
             }
@@ -187,7 +185,7 @@ public class Game extends Thread {
         for (int i = 0; i < Sprite.sprites.size(); i++) {
 
             //Delete sprite if not visible anymore
-            if(Sprite.sprites.get(i).x < player.x - 5000){
+            if(Sprite.sprites.get(i).getX() < player.getX() - 600){
                 Sprite.sprites.remove(i);
                 continue;
             }
@@ -212,15 +210,15 @@ public class Game extends Thread {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ((MainActivity)activity).updateScore((int)(player.score));
-                ((MainActivity)activity).updateFuel((int)player.fuel);
+                ((MainActivity)activity).updateScore((int)(player.getScore()));
+                ((MainActivity)activity).updateFuel((int)player.getFuel());
             }
         });
 
         long execTime = System.currentTimeMillis() - lastFrameDate;
-        if(execTime < 16) {
+        if(execTime < period) {
             try {
-                sleep(16 - execTime);
+                sleep(period - execTime);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -230,11 +228,11 @@ public class Game extends Thread {
 
     public void startMainLoop(){
         lastFrameDate = System.currentTimeMillis();
-        start();
+        running = true;
     }
 
     public void stopMainLoop(){
-        interrupt();
+        running = false;
     }
 
     public void startGame(){

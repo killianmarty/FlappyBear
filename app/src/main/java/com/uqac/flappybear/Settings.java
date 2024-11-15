@@ -19,7 +19,7 @@ public class Settings {
     public static final double MAX_GENERATION_FREQUENCY = 1;
     public static final double GENERATION_FREQUENCY_GAP = 0.03;
     public static final int MIN_VEHICLE_GENERATION_HEIGHT = MAX_HEIGHT * 2/3;
-    public static final int VEHICLE_GENERATION_HEIGHT_GAP = MAX_HEIGHT * 1/4;
+    public static final int VEHICLE_GENERATION_HEIGHT_GAP = MAX_HEIGHT /4;
 
     //RENDERER SETTINGS
     public static final int PLAYER_DISPLAY_X = 20;

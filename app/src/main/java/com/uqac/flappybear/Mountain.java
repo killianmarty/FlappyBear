@@ -46,12 +46,12 @@ class Mountain extends Sprite{
     public Mountain(double x, double y){
         super(x, y, 0, 0);
         SpriteAttributes attributes = Mountain.select();
-        this.w = attributes.w;
-        this.h = attributes.h;
+        this.w = attributes.getWidth();
+        this.h = attributes.getHeight();
         
         Mountain.lastRightBoundX = this.getRightBoundX();
 
-        this.addTexture(attributes.texture);
+        this.addTexture(attributes.getTexture());
 
         Sprite.pushBackgroundSprite(this);
     }
