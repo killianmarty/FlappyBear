@@ -1,6 +1,9 @@
 package com.uqac.flappybear;
 
 import android.app.Activity;
+import android.widget.TextView;
+
+import androidx.room.Room;
 
 import java.util.Set;
 
@@ -262,10 +265,14 @@ public class Game extends Thread {
 
         stopMainLoop();
 
+        //Add new score to database
+
+
         //Show the restart menu
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                ((MainActivity)activity).updateBestScore((int)player.getScore());
                 ((MainActivity)activity).showRestartMenu();
             }
         });

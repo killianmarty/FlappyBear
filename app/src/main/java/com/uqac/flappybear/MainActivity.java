@@ -15,12 +15,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 
 import org.w3c.dom.Text;
+
+import kotlinx.coroutines.debug.AgentPremain;
 
 public class MainActivity extends AppCompatActivity {
 
     private Game game;
+    private ScoreDB db;
+    private Score bestScore;
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -34,6 +39,16 @@ public class MainActivity extends AppCompatActivity {
         game = new Game(this, findViewById(R.id.canvas));
         game.initGame();
 
+        db = Room.databaseBuilder(getApplicationContext(), ScoreDB.class, "game-database")
+                .allowMainThreadQueries()
+                .build();
+
+        bestScore = db.scoreDao().getBestScore();
+        if(bestScore != null) {
+            ((TextView) findViewById(R.id.menuBestScore)).setText("Meilleur score: " + bestScore.score);
+        }else{
+            ((TextView) findViewById(R.id.menuBestScore)).setText("Meilleur score: 0");
+        }
         //Start button listener
         findViewById(R.id.menuStartBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,12 +90,21 @@ public class MainActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.score)).setText("Score : " + newScore.toString());
     }
 
+    public void updateBestScore(Integer newScore){
+        if(bestScore == null || newScore >= bestScore.score){
+            bestScore = new Score(newScore);
+            db.scoreDao().insertScore(bestScore);
+        }
+        ((TextView) findViewById(R.id.menuBestScore)).setText("Meilleur score: " + bestScore.score);
+    }
+
     public void updateFuel(int newFuel){
         ((ProgressBar)findViewById(R.id.fuelBar)).setProgress(newFuel);
     }
 
     public void hideMenu() {
         findViewById(R.id.menu).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.menuBestScore)).setVisibility(View.VISIBLE);
     }
 
     public void showRestartMenu(){
@@ -109,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         imageView.setImageResource(R.drawable.play_button);
+        ((TextView) findViewById(R.id.menuBestScore)).setVisibility(View.GONE);
         findViewById(R.id.menu).setVisibility(View.VISIBLE);
     }
 }
